@@ -47,7 +47,8 @@ function App() {
   }, [handleSubmit]);
 
   return (
-    <>
+    <div className="container">
+      <h1>Adding Users To the db</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -55,21 +56,18 @@ function App() {
           placeholder="name"
           onChange={(e) => setName(e.target.value)}
         />
-        <br />
         <input
           type="number"
           value={age}
           placeholder="age"
           onChange={(e) => setAge(e.target.value)}
         />
-        <br />
         <input
           type="email"
           value={email}
           placeholder="email"
           onChange={(e) => setEmail(e.target.value)}
         />
-        <br />
         <input type="submit" value="submit" />
       </form>
       <ul>
@@ -80,7 +78,7 @@ function App() {
           </div>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 
