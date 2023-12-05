@@ -11,16 +11,11 @@ function App() {
     try {
       const res = await axios.get("http://localhost:5000/users");
       const data = res.data;
-      console.log(data);
       setUsers(data);
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    dataFetching();
-  }, []);
 
   const createUser = () => {
     axios
@@ -29,27 +24,62 @@ function App() {
         age: age,
         email: email,
       })
-      .then((res) => console.log("user created", res.data));
+      .then((res) => {
+        console.log("user created", res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (name && age && email) {
+      createUser();
+      setEmail("");
+      setName("");
+      setAge("");
+    }
+  };
+
+  useEffect(() => {
+    dataFetching();
+  }, [handleSubmit]);
 
   return (
     <>
-      <div>
-        <input type="text" placeholder="name" onChange={(e) => setName(e.target.value)} />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={name}
+          placeholder="name"
+          onChange={(e) => setName(e.target.value)}
+        />
         <br />
-        <input type="number" placeholder="age" onChange={(e) => setAge(e.target.value)} />
+        <input
+          type="number"
+          value={age}
+          placeholder="age"
+          onChange={(e) => setAge(e.target.value)}
+        />
         <br />
-        <input type="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+        <input
+          type="email"
+          value={email}
+          placeholder="email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <br />
-        <button onClick={createUser}>Submit</button>
-      </div>
-      {users.map((user) => (
-        <ul key={user._id}>
-          <li>Hello my name is {user.name}</li>
-          <li>am {user.age} yo</li>
-          <li>contact me at: {user.email}</li>
-        </ul>
-      ))}
+        <input type="submit" value="submit" />
+      </form>
+      <ul>
+        {users.map((user) => (
+          <div key={user._id}>
+            Hello my name is {user.name}
+            am {user.age} yo contact me at: {user.email}
+          </div>
+        ))}
+      </ul>
     </>
   );
 }
