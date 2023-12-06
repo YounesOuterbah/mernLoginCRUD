@@ -6,6 +6,7 @@ app.use(cors());
 app.use(express.json());
 require("dotenv").config();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // CONNECT TO DB
 const mongoose = require("mongoose");
@@ -51,9 +52,10 @@ app.post("/login", async (req, res) => {
   !admin && res.json({ message: "admin dosent exists" });
 
   const isValidPassword = await bcrypt.compare(password, admin.password);
-  !isValidPassword
-    ? res.json({ message: "username or password is incorrect" })
-    : res.json({ message: `welcome back ${username}` });
+  !isValidPassword && res.json({ message: "username or password is incorrect" });
+
+  const token = jwt.sign({ id: admin._id }, process.env.SECRET);
+  return res.json({ token, adminID: admin._id, message: `welcome back ${username}` });
 });
 
 // PORT
