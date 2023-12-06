@@ -46,9 +46,14 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const admin = await AdminModel.findOne({ username });
 
+  const admin = await AdminModel.findOne({ username });
   !admin && res.json({ message: "admin dosent exists" });
+
+  const isValidPassword = await bcrypt.compare(password, admin.password);
+  !isValidPassword
+    ? res.json({ message: "username or password is incorrect" })
+    : res.json({ message: `welcome back ${username}` });
 });
 
 // PORT
