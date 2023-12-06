@@ -9,7 +9,7 @@ function App() {
 
   const dataFetching = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/users");
+      const res = await axios.get(`http://localhost:5005/users`);
       const data = res.data;
       setUsers(data);
     } catch (error) {
@@ -19,7 +19,7 @@ function App() {
 
   const createUser = () => {
     axios
-      .post("http://localhost:5000/createUser", {
+      .post("http://localhost:5005/createUser", {
         name: name,
         age: age,
         email: email,

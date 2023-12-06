@@ -2,8 +2,10 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+require("dotenv").config();
+const bcrypt = require("bcrypt");
 
 // CONNECT TO DB
 const mongoose = require("mongoose");
@@ -25,8 +27,25 @@ app.post("/createUser", async (req, res) => {
   res.json(req.body);
 });
 
+// IMPORT ADMIN MODEL
+const AdminModel = require("./models/Admins");
+
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+  const admin = await AdminModel.findOne({ username });
+
+  admin && res.json({ message: "user already exists!" });
+
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
+  const newAdmin = new AdminModel({ username, password: hashedPassword });
+  await newAdmin.save();
+
+  return res.json({ message: "user created succefully" });
+});
+
 // PORT
-const PORT = "5000";
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log("Server Working!");
 });
