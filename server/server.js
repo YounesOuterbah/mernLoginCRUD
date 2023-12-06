@@ -44,6 +44,13 @@ app.post("/register", async (req, res) => {
   return res.json({ message: "user created succefully" });
 });
 
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  const admin = await AdminModel.findOne({ username });
+
+  !admin && res.json({ message: "admin dosent exists" });
+});
+
 // PORT
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
